@@ -15,8 +15,19 @@ class SIForm extends StatefulWidget {
 }
 
 class _SIFormState extends State<SIForm> {
-  var _uang = ['dolar', 'rupiah', 'euro'];
+  String? _currentItem = "Rupiah";
+  var ListItem = [
+    "Rupiah",
+    "Dollar",
+    "Euro",
+  ];
   final _minimumPaddding = 5.0;
+
+  void dropDownItem(changeValue) {
+    setState(() {
+      _currentItem = changeValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +37,90 @@ class _SIFormState extends State<SIForm> {
       ),
       body: Container(
         margin: EdgeInsets.all(_minimumPaddding * 2),
-        child: Column(
+        child: ListView(
           children: [
             getImageAssets(),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Principal',
-                hintText: 'Enter Principal eg 12000',
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Principal',
+                  hintText: 'Enter Principal eg 12000',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Rate of Interest',
+                  hintText: 'Enter Rate of Interest in percent',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Rate of Interest',
+                        hintText: 'Enter Rate of Interest in percent',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: DropdownButton<String>(
+                      items: ListItem.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      value: _currentItem,
+                      onChanged: (changeValue) {
+                        dropDownItem(changeValue);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                      child: Text("Calculate"),
+                      onPressed: () {},
+                    ),
+                  ),
+                  Expanded(
+                    child: RaisedButton(
+                      child: Text("Reset"),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5.0 * 2),
+              child: Text('Todo Text'),
             ),
           ],
         ),
