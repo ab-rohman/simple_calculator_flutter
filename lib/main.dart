@@ -35,6 +35,11 @@ class _SIFormState extends State<SIForm> {
     });
   }
 
+  TextEditingController principalController = TextEditingController();
+  TextEditingController roiController = TextEditingController();
+  TextEditingController termController = TextEditingController();
+
+  var displayResult = '';
   @override
   Widget build(BuildContext context) {
     TextStyle? textStyle = Theme.of(context).textTheme.headline1;
@@ -50,6 +55,7 @@ class _SIFormState extends State<SIForm> {
             Padding(
               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: TextField(
+                controller: principalController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Principal',
@@ -63,6 +69,7 @@ class _SIFormState extends State<SIForm> {
             Padding(
               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: TextField(
+                controller: roiController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Rate of Interest',
@@ -79,10 +86,11 @@ class _SIFormState extends State<SIForm> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: termController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        labelText: 'Rate of Interest',
-                        hintText: 'Enter Rate of Interest in percent',
+                        labelText: 'Term',
+                        hintText: 'Term in Years',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
@@ -115,7 +123,11 @@ class _SIFormState extends State<SIForm> {
                       color: Theme.of(context).accentColor,
                       textColor: Theme.of(context).primaryColorDark,
                       child: Text("Calculate"),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          this.displayResult = _calculateReturn();
+                        });
+                      },
                     ),
                   ),
                   Expanded(
@@ -131,7 +143,7 @@ class _SIFormState extends State<SIForm> {
             ),
             Padding(
               padding: EdgeInsets.all(5.0 * 2),
-              child: Center(child: Text('Todo Text')),
+              child: Center(child: Text(this.displayResult)),
             ),
           ],
         ),
@@ -151,5 +163,15 @@ class _SIFormState extends State<SIForm> {
       child: image,
       margin: EdgeInsets.all(_minimumPaddding * 10),
     );
+  }
+
+  String _calculateReturn() {
+    double principal = double.parse(principalController.text);
+    double roi = double.parse(roiController.text);
+    double term = double.parse(termController.text);
+
+    double total = principal + (principal * roi * term) / 100;
+    String result = 'This is your total $total';
+    return result;
   }
 }
