@@ -21,6 +21,7 @@ class SIForm extends StatefulWidget {
 }
 
 class _SIFormState extends State<SIForm> {
+  var _formKey = GlobalKey<FormState>();
   String? _currentItem = "Rupiah";
   var ListItem = [
     "Rupiah",
@@ -47,109 +48,119 @@ class _SIFormState extends State<SIForm> {
       appBar: AppBar(
         title: Text("Simple test Calculator"),
       ),
-      body: Container(
-        margin: EdgeInsets.all(_minimumPaddding * 2),
-        child: ListView(
-          children: [
-            getImageAssets(),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: TextField(
-                controller: principalController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Principal',
-                  hintText: 'Enter Principal eg 12000',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+      body: Form(
+        key: _formKey,
+        child: Container(
+          margin: EdgeInsets.all(_minimumPaddding * 2),
+          child: ListView(
+            children: [
+              getImageAssets(),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: TextFormField(
+                  controller: principalController,
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Please fill the form';
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Principal',
+                    hintText: 'Enter Principal eg 12000',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: TextField(
-                controller: roiController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Rate of Interest',
-                  hintText: 'Enter Rate of Interest in percent',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: TextFormField(
+                  controller: roiController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Rate of Interest',
+                    hintText: 'Enter Rate of Interest in percent',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: termController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Term',
-                        hintText: 'Term in Years',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: termController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Term',
+                          hintText: 'Term in Years',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: DropdownButton<String>(
-                      items: ListItem.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      value: _currentItem,
-                      onChanged: (changeValue) {
-                        dropDownItem(changeValue);
-                      },
+                    Expanded(
+                      child: DropdownButton<String>(
+                        items: ListItem.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        value: _currentItem,
+                        onChanged: (changeValue) {
+                          dropDownItem(changeValue);
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: RaisedButton(
-                      color: Theme.of(context).accentColor,
-                      textColor: Theme.of(context).primaryColorDark,
-                      child: Text("Calculate"),
-                      onPressed: () {
-                        setState(() {
-                          this.displayResult = _calculateReturn();
-                        });
-                      },
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        textColor: Theme.of(context).primaryColorDark,
+                        child: Text("Calculate"),
+                        onPressed: () {
+                          setState(() {
+                            if (_formKey.currentState!.validate()) {
+                              this.displayResult = _calculateReturn();
+                            }
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: RaisedButton(
-                      color: Theme.of(context).primaryColorDark,
-                      textColor: Theme.of(context).primaryColorLight,
-                      child: Text("Reset"),
-                      onPressed: () {
-                        setState(() {
-                          _reset();
-                        });
-                      },
+                    Expanded(
+                      child: RaisedButton(
+                        color: Theme.of(context).primaryColorDark,
+                        textColor: Theme.of(context).primaryColorLight,
+                        child: Text("Reset"),
+                        onPressed: () {
+                          setState(() {
+                            _reset();
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(5.0 * 2),
-              child: Center(child: Text(this.displayResult)),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.all(5.0 * 2),
+                child: Center(child: Text(this.displayResult)),
+              ),
+            ],
+          ),
         ),
       ),
     );
