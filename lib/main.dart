@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: 'Simple Calculator',
     home: SIForm(),
+    theme: ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Colors.indigo,
+      accentColor: Colors.indigoAccent,
+    ),
   ));
 }
 
@@ -31,6 +37,7 @@ class _SIFormState extends State<SIForm> {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle? textStyle = Theme.of(context).textTheme.headline1;
     return Scaffold(
       appBar: AppBar(
         title: Text("Simple test Calculator"),
@@ -105,12 +112,16 @@ class _SIFormState extends State<SIForm> {
                 children: [
                   Expanded(
                     child: RaisedButton(
+                      color: Theme.of(context).accentColor,
+                      textColor: Theme.of(context).primaryColorDark,
                       child: Text("Calculate"),
                       onPressed: () {},
                     ),
                   ),
                   Expanded(
                     child: RaisedButton(
+                      color: Theme.of(context).primaryColorDark,
+                      textColor: Theme.of(context).primaryColorLight,
                       child: Text("Reset"),
                       onPressed: () {},
                     ),
@@ -120,7 +131,7 @@ class _SIFormState extends State<SIForm> {
             ),
             Padding(
               padding: EdgeInsets.all(5.0 * 2),
-              child: Text('Todo Text'),
+              child: Center(child: Text('Todo Text')),
             ),
           ],
         ),
