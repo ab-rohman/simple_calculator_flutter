@@ -135,7 +135,11 @@ class _SIFormState extends State<SIForm> {
                       color: Theme.of(context).primaryColorDark,
                       textColor: Theme.of(context).primaryColorLight,
                       child: Text("Reset"),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _reset();
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -173,5 +177,13 @@ class _SIFormState extends State<SIForm> {
     double total = principal + (principal * roi * term) / 100;
     String result = 'This is your total $total';
     return result;
+  }
+
+  void _reset() {
+    principalController.text = '';
+    roiController.text = '';
+    termController.text = '';
+    displayResult = '';
+    _currentItem = ListItem[0];
   }
 }
